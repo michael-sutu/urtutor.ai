@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>urtutor.ai - Login</title>
+		<link rel="stylesheet" href="./src/styles.css">
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+	</head>
+	<body>
+		<div class="leftmain">
+			<a class="logo" href="./"><img src="./images/logo.png">urtutor.ai</a>
+			<br>
+			<h1>Learning just got easier</h1>
+			<p>Experience the future of education with our AI tutoring website. Get personalized, expert guidance at your fingertips.</p>
+			<div>
+				<h2>New here?</h2>
+				<p>Sign up and discover the new way to study.</p>
+				<button onclick="window.location = './signup'">Create Your Account</button>
+			</div>
+		</div>
+		<div class="rightmain">
+			<h1>Login</h1>
+			<a>New here? <span class="s" onclick="window.location = './signup'">Sign Up</span></a>
+			<label id="e">Email</label>
+			<input placeholder="example@email.com" id="email">
+			<label id="p">Password</label>
+			<input placeholder="Password" type="password" id="password">
+			<button style="margin-top: 30px;" id="loginbtn" onclick="login()">Login<i class="fa-solid fa-circle-notch" id="loading"></i></button>
+		</div>
+		<div class="loading"><i class="fa-solid fa-circle-notch"></i></div>
+		<script src="./src/script.js"></script>
+	</body>
+</html>
