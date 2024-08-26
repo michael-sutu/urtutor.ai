@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>urtutor.ai - Sign Up</title>
+		<link rel="stylesheet" href="./src/styles.css">
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+	</head>
+	<body>
+		<div class="leftmain">
+			<a class="logo" href="./"><img src="./images/logo.png">urtutor.ai</a>
+			<br>
+			<h1>Learning just got easier</h1>
+			<p>Experience the future of education with our AI tutoring website. Get personalized, expert guidance at your fingertips.</p>
+			<div>
+				<h2>Have an account?</h2>
+				<p>Login and get right back to that study grind.</p>
+				<button onclick="window.location = './login'">Login</button>
+			</div>
+		</div>
+		<div class="rightmain">
+			<h1>Sign Up</h1>
+			<a>Already have an account? <span class="s" onclick="window.location = './login'">Login</span></a>
+			<label>Level of Education</label>
+			<div class="quad">
+				<div>
+					<i class="fa-solid fa-school"></i>
+					<p>Grade School</p>
+				</div>
+				<div>
+					<i class="fa-solid fa-school-flag"></i>
+					<p>Highschool</p>
+				</div>
+				<div>
+					<i class="fa-solid fa-building-flag"></i>
+					<p>College</p>
+				</div>
+				<div>
+					<i class="fa-solid fa-graduation-cap"></i>
+					<p>Other</p>
+				</div>
+			</div>
+			<div class="double">
+				<div>
+					<label id="fn">First Name</label>
+					<input placeholder="First" id="firstName">
+				</div>
+				<div>
+					<label id="ln">Last Name</label>
+					<input placeholder="Last" id="lastName">
+				</div>
+			</div>
+			<label id="e">Email</label>
+			<input placeholder="example@email.com" id="email">
+			<label id="p">Password</label>
+			<input placeholder="Password" type="password" id="password">
+			<label id="cp">Confirm Password</label>
+			<input placeholder="Password" type="password" id="confirmPassword">
+			<button style="margin-top: 30px;" onclick="signUp()" id="signupbtn">Sign Up<i class="fa-solid fa-circle-notch" id="loading"></i></button>
+		</div>
+		<div class="loading"><i class="fa-solid fa-circle-notch"></i></div>
+		<script>
+			let quadChildren = document.querySelector(".quad").children
+
+			for(let i = 0; i < quadChildren.length; i++) {
+				quadChildren[i].addEventListener("click", (e) => {
+					if(document.querySelector(".chosen")) {
+						document.querySelector(".chosen").className = ""
+					}
+					quadChildren[i].className = "chosen"
+				})
+			}
+		</script>
+		<script src="./src/script.js"></script>
+	</body>
+</html>
