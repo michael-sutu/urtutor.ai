@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>urtutor.ai - Dashboard</title>
+		<link rel="stylesheet" href="./src/styles.css">
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+	</head>
+	<body>
+		<nav>
+			<a class="logo" href="./"><img src="./images/logo.png">urtutor.ai</a>
+			<div class="acc">
+				<i class="fa-solid fa-user"></i>
+				<p id="fullname"></p>
+				<i class="fa-solid fa-caret-down" style="position: absolute; right: 40px; float: right;"></i>
+				<div class="dropdown-menu">
+						<button id="settingsbtn"><i class="fa-solid fa-gear"></i>Settings</button>
+						<button id="paymentsbtn"><i class="fa-solid fa-credit-card"></i>Payments</button>
+						<button onclick="logout()"><i class="fa-solid fa-right-from-bracket"></i>Logout</button>
+				</div>
+			</div>
+		</nav>
+		<div class="reviewdiv">
+			<h1>Your Sessions</h1>
+			<p>You can look over your past turoring sessions or continue your current active ones.</p>
+			<div style="flex-wrap: wrap;"></div>
+			<button onclick="window.location = './setup'"><i class="fa-solid fa-plus"></i>New Session</button>
+		</div>
+		<div class="maincenter">
+			<h2>Looks like you haven't started your first session yet.</h2>
+			<button onclick="window.location = './setup'"><i class="fa-solid fa-plus"></i>Start session</button>
+		</div>
+		<div class="prompt">
+			<div class="option" id="settings">
+				<h1>Settings</h1>
+				<p>Just edit the input fields and click save to update your information.</p>
+				<div class="double">
+					<div>
+						<label id="fn">First Name</label>
+						<input value="" id="firstName">
+					</div>
+					<div>
+						<label id="ln">Last Name</label>
+						<input value="" id="lastName">
+					</div>
+				</div>
+				<label id="e">Email</label>
+				<input value="" id="email">
+				<div class="double" style="margin-top: 15px;">
+					<div>
+						<label id="p">Password</label>
+						<input placeholder="New Password" type="password" id="password">
+					</div>
+				</div>
+				<button id="delete">Delete Account</button>
+				<div class="btns">
+					<button class="cancel">Cancel</button>
+					<button class="next" id="save" onclick="update()">Save</button>
+				</div>
+			</div>
+			<div class="option" id="payments">
+				<h1>Payments</h1>
+				<p>Here is your history of payments.</p>
+				<div class="middle">
+					<a>You have not paid for any sessions yet.</a>
+				</div>
+				<div class="btns">
+					<button class="cancel">Close</button>
+				</div>
+			</div>
+		</div>
+		<div class="loading"><i class="fa-solid fa-circle-notch"></i></div>
+		<script>
+				document.addEventListener('DOMContentLoaded', function() {
+					let acc = document.querySelector('.acc')
+					let dropdown = document.querySelector('.dropdown-menu')
+
+					acc.addEventListener('click', function(event) {
+						dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block'
+						if(dropdown.style.display == "block") {
+							acc.style.borderRadius = "5px 5px 0px 0px"
+						} else {
+							acc.style.borderRadius = "5px"
+						}
+						event.stopPropagation()
+					})
+
+					document.addEventListener('click', function(event) {
+						if (event.target !== acc && event.target.closest('.acc') !== acc) {
+							dropdown.style.display = 'none'
+							acc.style.borderRadius = "5px"
+						}
+					})
+
+					let stage = 0
+					document.getElementById("delete").addEventListener("click", (e) => {
+						stage += 1
+						if(stage == 1) {
+							document.getElementById("delete").textContent = "Are you sure?"	
+						} else if(stage == 2) {
+							document.getElementById("delete").innerHTML = `<i class="fa-solid fa-circle-notch" id="loading" style="opacity: 1; float: none;"></i>`
+							document.getElementById("delete").disabled = true
+							fetch('./deleteaccount', { method: 'POST', headers: { 'Content-Type': 'application/json'},
+								body: JSON.stringify({
+									private: localStorage.getItem("private")
+								})
+							})
+							.then(response => response.json())
+							.then(data => {
+								if(data.code == 500) {
+									location.reload()
+								} else if(data.code == 200) {
+									location.reload()
+								}
+							})
+						}
+					})
+
+					document.getElementById("settingsbtn").addEventListener("click", (e) => {
+						document.querySelector(".prompt").style.display = "flex"
+						document.getElementById("settings").style.display = "flex"
+					})
+
+					let first = true
+					document.getElementById("paymentsbtn").addEventListener("click", (e) => {
+						if(first) {
+							document.querySelector(".middle").querySelector("a").innerHTML = `<i class="fa-solid fa-circle-notch" id="loading" style="opacity: 1; float: none;"></i>`
+							fetch('./getpayments', { method: 'POST', headers: { 'Content-Type': 'application/json'},
+								body: JSON.stringify({
+									private: localStorage.getItem("private")
+								})
+							})
+							.then(response => response.json())
+							.then(data => {
+								if(data.code == 400 || data.code == 500) {
+									window.location = "./dashboard"
+								} else {
+									if(data.payments.length > 0) {
+										document.querySelector(".middle").querySelector("a").remove()
+										document.querySelector(".middle").style.justifyContent = "unset"
+										document.querySelector(".middle").style.backgroundColor = "white"
+
+										for(let i = data.payments.length - 1; i >= 0; i--) {		
+												document.querySelector(".middle").innerHTML += `
+												<div>
+													<a style="float: left; color: green;">$${data.payments[i].spent}</a>
+													<a>${data.payments[i].duration} Minutes Session</a>
+													<a style="float: right;">${data.payments[i].date}</a>
+												</div>
+											`
+										}
+									} else {
+										document.querySelector(".middle").querySelector("a").innerHTML = `You have not paid for any sessions yet.`
+									}
+
+									document.querySelector(".prompt").style.display = "flex"
+									document.getElementById("payments").style.display = "flex"
+									first = false
+								}
+							})
+						} else {
+							document.querySelector(".prompt").style.display = "flex"
+							document.getElementById("payments").style.display = "flex"
+						}
+					})
+
+					document.querySelectorAll(".cancel").forEach((e) => {
+						e.addEventListener("click", (e) => {
+							document.querySelector(".prompt").style.display = "none"
+							document.getElementById("settings").style.display = "none"
+							document.getElementById("payments").style.display = "none"
+
+							document.getElementById("firstName").value = user.firstName
+							document.getElementById("lastName").value = user.lastName
+							document.getElementById("email").value = user.email
+							document.getElementById("password").value = ""
+
+							stage = 0
+							document.getElementById("delete").textContent = "Delete Account"
+						})
+					})
+				})
+		</script>
+		<script src="./src/script.js"></script>
+	</body>
+</html>
