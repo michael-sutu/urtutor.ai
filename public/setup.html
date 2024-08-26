@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>urtutor.ai - Setup</title>
+		<link rel="stylesheet" href="./src/styles.css">
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+	</head>
+	<body>
+		<div class="leftmain">
+			<a class="logo" href="./"><img src="./images/logo.png">urtutor.ai</a>
+			<br>
+			<h1>Learning just got easier</h1>
+			<p>Experience the future of education with our AI tutoring website. Get personalized, expert guidance at your fingertips.</p>
+			<div>
+				<h2>First time?</h2>
+				<p>Customize to see what helps you learn best.</p>
+				<button>Watch Example Video</button>
+			</div>
+		</div>
+		<div class="rightmain">
+			<h1>Set Up</h1>
+			<a>Custimize your tutor to help you learn best.</a>
+			<label style="font-size: 17px;" id="v">Voice</label>
+			<div class="options" id="voices">
+				<div>
+					<img src="./images/arnold.png">
+					<p>Arnold</p>
+					<audio id="arnold" src="./src/arnold.mp3"></audio>
+					<button id="listen" data-voice="arnold"><i class="fa-solid fa-volume-high" style="margin-right: 10px;"></i>Listen</button>
+				</div>
+				<div>
+					<img src="./images/charlie.png">
+					<p>Charlie</p>
+					<audio id="charlie" src="./src/charlie.mp3"></audio>
+					<button id="listen" data-voice="charlie"><i class="fa-solid fa-volume-high" style="margin-right: 10px;"></i>Listen</button>
+				</div>
+				<div>
+					<img src="./images/freya.png">
+					<p>Freya</p>
+					<audio id="freya" src="./src/freya.mp3"></audio>
+					<button id="listen" data-voice="freya"><i class="fa-solid fa-volume-high" style="margin-right: 10px;"></i>Listen</button>
+				</div>
+				<div>
+					<img src="./images/sarah.png">
+					<p>Sarah</p>
+					<audio id="sarah" src="./src/sarah.mp3"></audio>
+					<button id="listen" data-voice="sarah"><i class="fa-solid fa-volume-high" style="margin-right: 10px;"></i>Listen</button>
+				</div>
+				<div>
+					<img src="./images/michael.png">
+					<p>Michael</p>
+					<audio id="michael" src="./src/michael.mp3"></audio>
+					<button id="listen" data-voice="michael"><i class="fa-solid fa-volume-high" style="margin-right: 10px;"></i>Listen</button>
+				</div>
+				<div>
+					<img src="./images/grace.png">
+					<p>Grace</p>
+					<audio id="grace" src="./src/grace.mp3"></audio>
+					<button id="listen" data-voice="grace"><i class="fa-solid fa-volume-high" style="margin-right: 10px;"></i>Listen</button>
+				</div>
+			</div>
+			<label style="font-size: 17px;" id="p">Personality</label>
+			<div class="options" id="personalities">
+				<div>
+					<p>Funny</p>
+				</div>
+				<div>
+					<p>Serious</p>
+				</div>
+				<div>
+					<p>Casual</p>
+				</div>
+				<div>
+					<p>Honest</p>
+				</div>
+				<div>
+					<p>Motivational</p>
+				</div>
+			</div>
+			<label style="font-size: 17px;" id="i">Custom Instructions</label>
+			<textarea id="custom" placeholder="Custom instructions for your tutor..." maxlength="1000"></textarea>
+			<label style="font-size: 17px;" id="d">Starting Duration</label>
+			<div class="options" id="durations">
+				<div>
+					<p>20 Minutes</p>
+					<span>$5</span>
+				</div>
+				<div>
+					<p>40 Minutes</p>
+					<span>$10</span>
+				</div>
+				<div>
+					<p>60 Minutes</p>
+					<span>$15</span>
+				</div>
+			</div>
+			<div class="duel">
+				<button onclick="window.location = './dashboard'">Cancel</button>
+				<button onclick="setup()" style="border: none; background-color: #56CBF9;" id="start">Start</button>
+			</div>	
+		</div>
+		<div class="loading"><i class="fa-solid fa-circle-notch"></i></div>
+		<script>
+			document.addEventListener("DOMContentLoaded", function() {
+				document.querySelectorAll("#listen").forEach((btn) => {
+					btn.addEventListener("click", (e) => {
+						document.getElementById(e.target.dataset.voice).play()
+						e.target.innerHTML = `<i class="fa-solid fa-circle-notch" id="loading" style="opacity: 1; float: none;"></i>`
+						e.target.disabled = true
+
+						document.getElementById(e.target.dataset.voice).addEventListener("ended", (audio) => {
+							audio.target.parentElement.querySelector("button").disabled = false
+							audio.target.parentElement.querySelector("button").innerHTML = `<i class="fa-solid fa-volume-high" style="margin-right: 10px;"></i>Listen`
+						})
+					})
+				})
+
+				let voices = document.getElementById("voices").children
+				for(let i = 0; i < voices.length; i++) {
+					voices[i].addEventListener("click", (e) => {
+						if(document.querySelector(".chosenvoice")) {
+							document.querySelector(".chosenvoice").className = ""
+						}
+						voices[i].className = "chosenvoice"
+					})
+				}
+
+				let personalities = document.getElementById("personalities").children
+				for(let i = 0; i < personalities.length; i++) {
+						personalities[i].addEventListener("click", (e) => {
+						if(document.querySelector(".chosenpersonality")) {
+							document.querySelector(".chosenpersonality").className = ""
+						}
+						personalities[i].className = "chosenpersonality"
+					})
+				}
+
+				let durations = document.getElementById("durations").children
+				for(let i = 0; i < durations.length; i++) {
+						durations[i].addEventListener("click", (e) => {
+						if(document.querySelector(".chosenduration")) {
+							document.querySelector(".chosenduration").className = ""
+						}
+						durations[i].className = "chosenduration"
+					})
+				}
+			})
+		</script>
+		<script src="./src/script.js"></script>
+	</body>
+</html>
